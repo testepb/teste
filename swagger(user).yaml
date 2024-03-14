@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: Dreamy Chapters
+  description: |-
+    Projeto desenvolvido com base no conteúdo da Sprint 2.
+    
+    User Stories: Um empresário dono de uma livraria chamada “Dreamy Chapters”, está disposto a aumentar a oferta de livros online do seu negócio, afim de impulsionar as suas vendas. Depois dessa análise ele se reuniu com sua equipe de vendedores, composto por três pessoas, lhes explicou a situação e os instruiu que para o projeto acontecer seria fundamental o grupo (usuários) realizar um cadastro no Marketplace do ServeRest.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://dreamychapters.swagger.io/api/v3
+tags:
+  - name: book
+    description: Everything about your Books
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: store
+    description: Access to Dreamy Chapters orders
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: user
+    description: Operations about user
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: ''
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        required: true
+        content:
+          application/json:
+           schema:
+            $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    get:
+      tags:
+        - user
+      summary: Get all users
+      description: ''
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/User'
+  /user/{username}:
+    get:
+      tags:
+        - user
+      summary: Get user by user name
+      description: ''
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing.'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User not found
+    put:
+      tags:
+        - user
+      summary: Update user
+      description: 'This can only be done by the logged in user.'
+      operationId: updateUser
+      parameters:
+        - name: username
+          in: path
+          description: name that need to be deleted
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - isAdmin
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: John (ou qualquer outro nome)
+        email:
+          type: string
+          format: email
+          example: joao@example.com
+          pattern: "^(?!.*@(gmail|hotmail)\\.com).*$"
+            
+        password:
+          type: string
+          example: '12345'
+          minLength: 5
+          maxLength: 10
+        isAdmin:
+          type: boolean
+          example: false
+    
+  examples:
+    UserExample1:
+      value:
+        - name: João
+          email: joao@example.com
+          password: '12345'
+          isAdmin: false
+    UserExample2:
+      value:
+        - name: Roberto
+          email: roberto@example.com
+          password: '54321'
+          isAdmin: true
+    UserExample3:
+      value:
+        - name: Luna
+          email: luna@example.com
+          password: 'abcde'
+          isAdmin: false
